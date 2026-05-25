@@ -4,7 +4,7 @@ import os
 import json
 import base64
 
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 client = OpenAI(
     api_key=os.getenv("GROK_API_KEY"),

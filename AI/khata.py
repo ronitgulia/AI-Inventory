@@ -4,7 +4,7 @@ import os
 import json
 from datetime import datetime
 
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 client = OpenAI(
     api_key=os.getenv("GROK_API_KEY"),

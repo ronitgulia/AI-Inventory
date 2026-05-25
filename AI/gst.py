@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import os
 import json
 
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 client = OpenAI(
     api_key=os.getenv("GROK_API_KEY"),
