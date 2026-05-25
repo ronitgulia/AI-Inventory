@@ -5,8 +5,16 @@
       "name": "Ramesh Sharma",
       "phone": "9876543210",
       "address": "123 Main Road, Delhi",
-      "balance_due": 10000,
-      "transactions": []
+      "balance_due": 5000,
+      "transactions": [
+        {
+          "date": "25/05/2026 10:51",
+          "type": "payment",
+          "amount": 5000,
+          "description": "Cash payment aaya",
+          "balance_after": 5000
+        }
+      ]
     },
     {
       "id": "C002",
