@@ -1,0 +1,22 @@
+{
+  "distributors": [
+    {
+      "id": "D001",
+      "name": "Sharma Traders",
+      "phone": "9876543210",
+      "area": "Delhi North",
+      "products": ["Basmati Rice", "Sugar", "Wheat Flour"],
+      "payment_terms": "30 days",
+      "outstanding": 15000
+    },
+    {
+      "id": "D002",
+      "name": "Gupta Distributors",
+      "phone": "9765432109",
+      "area": "Delhi South",
+      "products": ["Refined Oil"],
+      "payment_terms": "15 days",
+      "outstanding": 8000
+    }
+  ]
+}
