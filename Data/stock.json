@@ -6,11 +6,12 @@
       "barcode": "8901234567890",
       "category": "Grains",
       "unit": "kg",
-      "current_stock": 100,
+      "current_stock": 150,
       "min_stock": 20,
       "purchase_price": 80,
       "selling_price": 95,
-      "distributor_id": "D001"
+      "distributor_id": "D001",
+      "last_updated": "25/05/2026 10:32"
     },
     {
       "id": "P002",
