@@ -1,0 +1,52 @@
+{
+  "products": [
+    {
+      "id": "P001",
+      "name": "Basmati Rice",
+      "barcode": "8901234567890",
+      "category": "Grains",
+      "unit": "kg",
+      "current_stock": 100,
+      "min_stock": 20,
+      "purchase_price": 80,
+      "selling_price": 95,
+      "distributor_id": "D001"
+    },
+    {
+      "id": "P002",
+      "name": "Refined Oil",
+      "barcode": "8902345678901",
+      "category": "Oil",
+      "unit": "litre",
+      "current_stock": 50,
+      "min_stock": 10,
+      "purchase_price": 120,
+      "selling_price": 140,
+      "distributor_id": "D002"
+    },
+    {
+      "id": "P003",
+      "name": "Sugar",
+      "barcode": "8903456789012",
+      "category": "Grains",
+      "unit": "kg",
+      "current_stock": 8,
+      "min_stock": 15,
+      "purchase_price": 45,
+      "selling_price": 52,
+      "distributor_id": "D001"
+    },
+    {
+      "id": "P004",
+      "name": "Wheat Flour",
+      "barcode": "8904567890123",
+      "category": "Grains",
+      "unit": "kg",
+      "current_stock": 5,
+      "min_stock": 20,
+      "purchase_price": 35,
+      "selling_price": 42,
+      "distributor_id": "D001"
+    }
+  ]
+}
