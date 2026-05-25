@@ -1,0 +1,55 @@
+{
+  "bills": [
+    {
+      "bill_number": "BILL-202605-0001",
+      "date": "25/05/2026 10:45",
+      "customer_id": "C001",
+      "items": [
+        {
+          "product_id": "P001",
+          "name": "Basmati Rice",
+          "barcode": "8901234567890",
+          "quantity": 5,
+          "unit": "kg",
+          "price_per_unit": 95,
+          "total": 475
+        },
+        {
+          "product_id": "P002",
+          "name": "Refined Oil",
+          "barcode": "8902345678901",
+          "quantity": 2,
+          "unit": "litre",
+          "price_per_unit": 140,
+          "total": 280
+        }
+      ],
+      "subtotal": 755,
+      "tax": 37.75,
+      "grand_total": 792.75,
+      "payment_mode": "cash",
+      "status": "paid"
+    },
+    {
+      "bill_number": "BILL-202605-0002",
+      "date": "25/05/2026 10:45",
+      "customer_id": "C002",
+      "items": [
+        {
+          "product_id": "P003",
+          "name": "Sugar",
+          "barcode": "8903456789012",
+          "quantity": 3,
+          "unit": "kg",
+          "price_per_unit": 52,
+          "total": 156
+        }
+      ],
+      "subtotal": 156,
+      "tax": 7.8,
+      "grand_total": 163.8,
+      "payment_mode": "udhari",
+      "status": "pending"
+    }
+  ]
+}

@@ -9,12 +9,20 @@
       "transactions": []
     },
     {
-      "id": "C002", 
+      "id": "C002",
       "name": "Suresh Gupta",
       "phone": "9765432100",
       "address": "456 Shop Road, Delhi",
-      "balance_due": 6000,
-      "transactions": []
+      "balance_due": 6163.8,
+      "transactions": [
+        {
+          "date": "25/05/2026",
+          "type": "credit",
+          "amount": 163.8,
+          "bill_number": "BILL-202605-0002",
+          "description": "Bill BILL-202605-0002"
+        }
+      ]
     }
   ]
 }
