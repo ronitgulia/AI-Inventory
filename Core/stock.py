@@ -2,26 +2,26 @@ import json
 import os
 from datetime import datetime
 
-# Data file ka path
+# Data file path
 STOCK_FILE = "data/stock.json"
 
 def load_stock():
-    """JSON se stock data load karo"""
+    """Load stock data from JSON"""
     with open(STOCK_FILE, "r") as f:
         return json.load(f)
 
 def save_stock(data):
-    """Stock data JSON mein save karo"""
+    """Save stock data in JSON"""
     with open(STOCK_FILE, "w") as f:
         json.dump(data, f, indent=2)
 
 def get_all_products():
-    """Saare products return karo"""
+    """Return all products"""
     data = load_stock()
     return data["products"]
 
 def get_product_by_barcode(barcode):
-    """Barcode se product dhundo"""
+    """Find product by barcode"""
     products = get_all_products()
     for product in products:
         if product["barcode"] == barcode:
@@ -29,7 +29,7 @@ def get_product_by_barcode(barcode):
     return None
 
 def get_product_by_id(product_id):
-    """ID se product dhundo"""
+    """Find product by ID"""
     products = get_all_products()
     for product in products:
         if product["id"] == product_id:
@@ -38,7 +38,7 @@ def get_product_by_id(product_id):
 
 def update_stock(product_id, quantity_change, operation="add"):
     """
-    Stock update karo
+    Update stock
     operation = "add" → naya stock aaya
     operation = "subtract" → sale hui
     """
@@ -50,7 +50,7 @@ def update_stock(product_id, quantity_change, operation="add"):
                 product["current_stock"] += quantity_change
             elif operation == "subtract":
                 if product["current_stock"] < quantity_change:
-                    return {"success": False, "message": f"Sirf {product['current_stock']} {product['unit']} stock hai!"}
+                    return {"success": False, "message": f"Only {product['current_stock']} {product['unit']} stock is available!"}
                 product["current_stock"] -= quantity_change
             
             product["last_updated"] = datetime.now().strftime("%d/%m/%Y %H:%M")
@@ -63,13 +63,13 @@ def update_stock(product_id, quantity_change, operation="add"):
                 "unit": product["unit"]
             }
     
-    return {"success": False, "message": "Product nahi mila!"}
+    return {"success": False, "message": "Product not found!"}
 
 def add_new_product(product_data):
-    """Naya product add karo"""
+    """Add new product"""
     data = load_stock()
     
-    # Naya ID generate karo
+    # Generate new ID
     existing_ids = [p["id"] for p in data["products"]]
     new_num = len(existing_ids) + 1
     product_data["id"] = f"P{new_num:03d}"
@@ -81,7 +81,7 @@ def add_new_product(product_data):
     return {"success": True, "product_id": product_data["id"]}
 
 def get_low_stock_products():
-    """Kam stock wale products dhundo"""
+    """Find low stock products"""
     products = get_all_products()
     low_stock = []
     
@@ -99,9 +99,9 @@ def get_low_stock_products():
     
     return low_stock
 
-# Test karo
+# Test
 if __name__ == "__main__":
-    print("=== Saare Products ===")
+    print("=== All Products ===")
     products = get_all_products()
     for p in products:
         print(f"{p['name']} — Stock: {p['current_stock']} {p['unit']}")
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     print("\n=== Low Stock Alert ===")
     low = get_low_stock_products()
     for p in low:
-        print(f"⚠️ {p['name']} — {p['status']} — Sirf {p['current_stock']} {p['unit']} bacha!")
+        print(f"⚠️ {p['name']} — {p['status']} — Only {p['current_stock']} {p['unit']} left!")
     
     print("\n=== Stock Update Test ===")
     result = update_stock("P001", 50, "add")

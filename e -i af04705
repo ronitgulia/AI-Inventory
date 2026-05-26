@@ -1,0 +1,16 @@
+[33mce00d04[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m All Set
+[33mbe79369[m remove .env from tracking, add to gitignore
+[33maf04705[m complete AI inventory management system
+[33m4fe69b1[m feat: integrate PDF generation into billing workflow and update main menu
+[33m2dacad3[m feat: add PDF bill generator with shop header and GST details
+[33m84f5c78[m feat: add barcode scanner with zxingcpp and opencv camera support
+[33mbc974fd[m Add .env to gitignore
+[33mc76948c[m feat: add complete interactive main menu connecting all modules
+[33mbf6e6b9[m feat: add complete interactive main menu connecting all modules
+[33m56f00a7[m feat: add khata management with payment tracking and customer statements
+[33m71fdc52[m feat: add distributor management with area-wise margin calculation
+[33mffea2d2[m feat: add billing system with cash and udhari payment modes
+[33m5a2eddc[m feat: add stock management core logic with CRUD and low stock detection
+[33m60d5503[m chore: add sample JSON data for stock, distributors, customers
+[33m0090760[m Files Upload
+[33m662d994[m first commit

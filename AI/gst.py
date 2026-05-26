@@ -11,7 +11,7 @@ client = OpenAI(
 )
 
 # Sample order data
-# Real app mein yeh bill scan se aayega
+# In real app, this will come from bill scan
 order_data = {
     "seller": {
         "name": "Sharma General Store",
@@ -36,19 +36,19 @@ order_data = {
 
 def calculate_gst(order_data):
     prompt = f"""
-    Tu ek GST expert hai Indian taxation ka.
+    You are a GST expert for Indian taxation.
     
-    Yeh order data hai:
+    This is the order data:
     {json.dumps(order_data, indent=2)}
     
-    Har item ke liye:
-    1. Sahi HSN code batao
-    2. GST rate batao
-    3. Agar supply_type "intra" hai toh CGST + SGST lagao (dono equal)
-    4. Agar supply_type "inter" hai toh sirf IGST lagao
-    5. Total amount calculate karo
+    For each item:
+    1. Tell the correct HSN code
+    2. Tell the GST rate
+    3. If supply_type is "intra" then apply CGST + SGST (both equal)
+    4. If supply_type is "inter" then apply only IGST
+    5. Calculate total amount
     
-    Mujhe JSON format mein do:
+    Give me in JSON format:
     {{
         "invoice_number": "INV-2024-001",
         "date": "date",
@@ -56,7 +56,7 @@ def calculate_gst(order_data):
         "buyer": {{}},
         "items": [
             {{
-                "name": "product naam",
+                "name": "product name",
                 "hsn_code": "HSN code",
                 "quantity": 0,
                 "unit": "unit",
@@ -82,7 +82,7 @@ def calculate_gst(order_data):
         }}
     }}
     
-    Sirf JSON do, kuch aur mat likho.
+    Only JSON do, kuch more mat likho.
     """
 
     response = client.chat.completions.create(
@@ -98,6 +98,6 @@ def calculate_gst(order_data):
     data = json.loads(text)
     return data
 
-# Test karo
+# Test
 result = calculate_gst(order_data)
 print(json.dumps(result, indent=2, ensure_ascii=False))

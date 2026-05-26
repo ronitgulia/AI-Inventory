@@ -10,8 +10,8 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
-# Yeh hamara sample stock data hai
-# Real app mein yeh database se aayega
+# This is our sample stock data
+# In real app, this will come from database
 stock_data = {
     "Paneer Tikka": {"current_stock": 5, "min_stock": 10, "unit": "kg"},
     "Veg Biryani": {"current_stock": 2, "min_stock": 15, "unit": "kg"},
@@ -22,16 +22,16 @@ stock_data = {
 
 def analyze_inventory(stock_data):
     prompt = f"""
-    Tu ek smart inventory manager hai Indian wholesale business ke liye.
+    You are a smart inventory manager for an Indian wholesale business.
     
-    Yeh mera current stock data hai:
+    This is my current stock data:
     {json.dumps(stock_data, indent=2)}
     
-    Mujhe yeh batao JSON format mein:
+    Tell me this in JSON format:
     {{
         "shortages": [
             {{
-                "product": "product naam",
+                "product": "product name",
                 "current_stock": 0,
                 "min_stock": 0,
                 "status": "CRITICAL ya LOW",
@@ -43,13 +43,13 @@ def analyze_inventory(stock_data):
             "recommendation 1",
             "recommendation 2"
         ],
-        "urgent_restock": ["sabse pehle yeh mangao"]
+        "urgent_restock": ["order this first"]
     }}
     
     Rules:
-    - Agar current_stock < min_stock ka 30% hai toh CRITICAL
-    - Agar current_stock < min_stock hai toh LOW
-    - Sirf JSON do, kuch aur mat likho
+    - If current_stock < 30% of min_stock then CRITICAL
+    - If current_stock < min_stock then LOW
+    - Only JSON do, kuch more mat likho
     """
 
     response = client.chat.completions.create(
@@ -65,6 +65,6 @@ def analyze_inventory(stock_data):
     data = json.loads(text)
     return data
 
-# Test karo
+# Test
 result = analyze_inventory(stock_data)
 print(json.dumps(result, indent=2, ensure_ascii=False))

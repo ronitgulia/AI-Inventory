@@ -14,7 +14,7 @@ def ensure_output_dir():
 
 def generate_pdf_bill(bill_data, shop_info=None):
     """
-    Bill ka PDF generate karo
+    Generate PDF for the bill
     """
     ensure_output_dir()
 
@@ -26,10 +26,10 @@ def generate_pdf_bill(bill_data, shop_info=None):
             "gstin": "07AAACS1234A1Z5"
         }
 
-    # PDF file ka naam
+    # PDF file name
     filename = f"{OUTPUT_DIR}/{bill_data['bill_number']}.pdf"
     
-    # Canvas banao
+    # Create canvas
     c = canvas.Canvas(filename, pagesize=A4)
     width, height = A4
 
@@ -141,16 +141,16 @@ def generate_pdf_bill(bill_data, shop_info=None):
 
     c.setFillColor(colors.HexColor("#1a1a2e"))
     c.setFont("Helvetica-Bold", 12)
-    c.drawCentredString(width/2, 17*mm, "Dhanyavaad! Phir aana! 🙏")
+    c.drawCentredString(width/2, 17*mm, "Thank you! Visit again! 🙏")
     c.setFont("Helvetica", 9)
-    c.drawCentredString(width/2, 10*mm, "Yeh computer generated bill hai")
+    c.drawCentredString(width/2, 10*mm, "This is a computer generated bill")
     c.drawCentredString(width/2, 5*mm, f"Generated: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
 
     c.save()
     print(f"✅ PDF bill saved: {filename}")
     return filename
 
-# Test karo
+# Test
 if __name__ == "__main__":
     import sys
     sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -190,4 +190,4 @@ if __name__ == "__main__":
     }
 
     filename = generate_pdf_bill(test_bill)
-    print(f"PDF yahan save hua: {filename}")
+    print(f"PDF saved here: {filename}")

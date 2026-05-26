@@ -12,13 +12,13 @@ client = OpenAI(
 )
 
 def scan_bill(image_path):
-    # Image ko base64 mein convert karo
+    # Convert image to base64
     with open(image_path, "rb") as f:
         image_data = base64.b64encode(f.read()).decode("utf-8")
 
     prompt = """
-    Yeh ek bill/invoice ki image hai.
-    Isse scan karke mujhe JSON format mein yeh data do:
+    This is an image of a bill/invoice.
+    Scan this and give me the data in JSON format:
     {
         "store_name": "dukan ka naam",
         "date": "bill ki date",
@@ -34,7 +34,7 @@ def scan_bill(image_path):
         "tax": 0.0,
         "grand_total": 0.0
     }
-    Sirf JSON do, kuch aur mat likho.
+    Only JSON do, kuch more mat likho.
     """
 
     response = client.chat.completions.create(
@@ -58,14 +58,14 @@ def scan_bill(image_path):
         ]
     )
 
-    # Response clean karo
+    # Clean response
     text = response.choices[0].message.content.strip()
     text = text.replace("```json", "").replace("```", "").strip()
 
-    # JSON parse karo
+    # Parse JSON
     data = json.loads(text)
     return data
 
-# Test karo
+# Test
 result = scan_bill("bill.jpg")
 print(json.dumps(result, indent=2, ensure_ascii=False))

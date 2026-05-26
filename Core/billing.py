@@ -25,31 +25,31 @@ def save_bills(data):
         json.dump(data, f, indent=2)
 
 def generate_bill_number():
-    """Unique bill number generate karo"""
+    """Generate unique bill number"""
     bills = load_bills()
     count = len(bills["bills"]) + 1
     return f"BILL-{datetime.now().strftime('%Y%m')}-{count:04d}"
 
 def create_bill(customer_id, items, payment_mode="cash"):
     """
-    Naya bill banao
+    Create new bill
     items = [{"product_id": "P001", "quantity": 2}, ...]
     """
     bill_items = []
     subtotal = 0
 
-    # Har item process karo
+    # Process each item
     for item in items:
         product = get_product_by_id(item["product_id"])
         
         if not product:
-            return {"success": False, "message": f"Product {item['product_id']} nahi mila!"}
+            return {"success": False, "message": f"Product {item['product_id']} not found!"}
 
-        # Stock check karo
+        # Check stock
         if product["current_stock"] < item["quantity"]:
             return {
                 "success": False,
-                "message": f"{product['name']} ka sirf {product['current_stock']} {product['unit']} bacha hai!"
+                "message": f"{product['name']} only {product['current_stock']} {product['unit']} left!"
             }
 
         item_total = product["selling_price"] * item["quantity"]
@@ -65,11 +65,11 @@ def create_bill(customer_id, items, payment_mode="cash"):
             "total": item_total
         })
 
-    # GST calculate karo (simple 5% for now)
+    # Calculate GST (simple 5% for now)
     tax = round(subtotal * 0.05, 2)
     grand_total = round(subtotal + tax, 2)
 
-    # Bill object banao
+    # Create bill object
     bill = {
         "bill_number": generate_bill_number(),
         "date": datetime.now().strftime("%d/%m/%Y %H:%M"),
@@ -82,16 +82,16 @@ def create_bill(customer_id, items, payment_mode="cash"):
         "status": "paid" if payment_mode == "cash" else "pending"
     }
 
-    # Stock update karo
+    # Update stock
     for item in items:
         update_stock(item["product_id"], item["quantity"], "subtract")
 
-    # Bill save karo
+    # Save bill
     bills_data = load_bills()
     bills_data["bills"].append(bill)
     save_bills(bills_data)
 
-    # Agar udhari hai toh customer balance update karo
+    # If credit, update customer balance
     if payment_mode == "udhari":
         customers_data = load_customers()
         for customer in customers_data["customers"]:
@@ -109,7 +109,7 @@ def create_bill(customer_id, items, payment_mode="cash"):
     return {"success": True, "bill": bill}
 
 def print_bill(bill):
-    """Bill print karo terminal mein"""
+    """Print bill in terminal"""
     print("\n" + "="*45)
     print(f"         BILL — {bill['bill_number']}")
     print(f"         Date: {bill['date']}")
@@ -125,12 +125,12 @@ def print_bill(bill):
     print(f"GRAND TOTAL:  ₹{bill['grand_total']}")
     print(f"Payment:      {bill['payment_mode'].upper()}")
     print("="*45)
-    print("       Dhanyavaad! Phir aana! 🙏")
+    print("       Thank you! Visit again! 🙏")
     print("="*45 + "\n")
 
-# Test karo
+# Test
 if __name__ == "__main__":
-    print("=== Bill Banana Test ===")
+    print("=== Create Bill Test ===")
     
     # Cash bill
     result = create_bill(
@@ -147,7 +147,7 @@ if __name__ == "__main__":
     else:
         print(f"Error: {result['message']}")
 
-    # Udhari bill
+    # Credit bill
     result2 = create_bill(
         customer_id="C002",
         items=[
@@ -158,6 +158,6 @@ if __name__ == "__main__":
     
     if result2["success"]:
         print_bill(result2["bill"])
-        print("Udhari mein add ho gaya customer ke khate mein!")
+        print("Added to customer's credit account!")
     else:
         print(f"Error: {result2['message']}")

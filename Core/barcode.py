@@ -9,17 +9,17 @@ from core.stock import get_product_by_barcode, update_stock
 
 def scan_barcode_from_camera():
     """
-    Camera se barcode scan karo
-    'q' dabao band karne ke liye
+    Scan barcode with camera
+    Press 'q' to close
     """
     cap = cv2.VideoCapture(0)
 
     if not cap.isOpened():
-        return {"success": False, "message": "Camera nahi mila!"}
+        return {"success": False, "message": "Camera not found!"}
 
-    print("\n📷 Camera chalu ho gaya!")
-    print("   Barcode camera ke saamne rakho — auto detect hoga")
-    print("   'q' dabao band karne ke liye")
+    print("\n📷 Camera started!")
+    print("   Place barcode in front of camera — it will auto detect")
+    print("   Press 'q' to close")
 
     scanned_product = None
 
@@ -28,13 +28,13 @@ def scan_barcode_from_camera():
         if not ret:
             break
 
-        # Barcode detect karo
+        # Detect barcode
         results = zxingcpp.read_barcodes(frame)
 
         for result in results:
             barcode_data = result.text
 
-            # Green box draw karo barcode ke around
+            # Draw green box around barcode
             pos = result.position
             pts = [
                 (pos.top_left.x, pos.top_left.y),
@@ -45,7 +45,7 @@ def scan_barcode_from_camera():
             for i in range(4):
                 cv2.line(frame, pts[i], pts[(i+1) % 4], (0, 255, 0), 2)
 
-            # Barcode data dikhao
+            # Show barcode data
             cv2.putText(
                 frame, barcode_data,
                 (pos.top_left.x, pos.top_left.y - 10),
@@ -53,7 +53,7 @@ def scan_barcode_from_camera():
                 (0, 255, 0), 2
             )
 
-            # Product dhundo
+            # Find product
             product = get_product_by_barcode(barcode_data)
 
             if product:
@@ -73,15 +73,15 @@ def scan_barcode_from_camera():
                 scanned_product = {
                     "success": False,
                     "barcode": barcode_data,
-                    "message": "Product database mein nahi hai!"
+                    "message": "Product is not in the database!"
                 }
 
-            # Auto return kar do jab barcode mile
+            # Auto return when barcode is found
             cap.release()
             cv2.destroyAllWindows()
             return scanned_product
 
-        # Frame dikhao
+        # Show frame
         cv2.imshow("Barcode Scanner — 'q' band karne ke liye", frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -89,11 +89,11 @@ def scan_barcode_from_camera():
 
     cap.release()
     cv2.destroyAllWindows()
-    return {"success": False, "message": "Scan cancel kiya"}
+    return {"success": False, "message": "Scan cancelled"}
 
 def scan_barcode_from_image(image_path):
     """
-    Image se barcode scan karo
+    Scan barcode from image
     """
     image = cv2.imread(image_path)
 
@@ -103,7 +103,7 @@ def scan_barcode_from_image(image_path):
     results = zxingcpp.read_barcodes(image)
 
     if not results:
-        return {"success": False, "message": "Koi barcode nahi mila image mein!"}
+        return {"success": False, "message": "No barcode found in image!"}
 
     output = []
     for result in results:
@@ -121,26 +121,26 @@ def scan_barcode_from_image(image_path):
 
 def add_item_by_barcode(barcode_data, quantity, operation="subtract"):
     """
-    Barcode se item dhundo aur stock update karo
-    operation = subtract — sale hui
-    operation = add — naya stock aaya
+    Find item by barcode and update stock
+    operation = subtract — sale made
+    operation = add — new stock arrived
     """
     product = get_product_by_barcode(barcode_data)
 
     if not product:
         return {
             "success": False,
-            "message": f"Barcode {barcode_data} ka product nahi mila!"
+            "message": f"Barcode {barcode_data} product not found!"
         }
 
     result = update_stock(product["id"], quantity, operation)
     return result
 
-# Test karo
+# Test
 if __name__ == "__main__":
     print("=== Barcode Scanner Test ===")
-    print("1. Camera se scan")
-    print("2. Image se scan")
+    print("1. Scan with camera")
+    print("2. Scan from image")
 
     choice = input("Choice (1/2): ").strip()
 
@@ -149,6 +149,6 @@ if __name__ == "__main__":
         print(f"\nResult: {json.dumps(result, indent=2, ensure_ascii=False)}")
 
     elif choice == "2":
-        path = input("Image path daalo: ").strip()
+        path = input("Enter image path: ").strip()
         result = scan_barcode_from_image(path)
         print(f"\nResult: {json.dumps(result, indent=2, ensure_ascii=False)}")

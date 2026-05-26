@@ -12,12 +12,12 @@ def save_customers(data):
         json.dump(data, f, indent=2)
 
 def get_all_customers():
-    """Saare customers return karo"""
+    """Return all customers"""
     data = load_customers()
     return data["customers"]
 
 def get_customer_by_id(customer_id):
-    """ID se customer dhundo"""
+    """Find customer by ID"""
     customers = get_all_customers()
     for c in customers:
         if c["id"] == customer_id:
@@ -25,7 +25,7 @@ def get_customer_by_id(customer_id):
     return None
 
 def add_customer(name, phone, address=""):
-    """Naya customer add karo"""
+    """Add new customer"""
     data = load_customers()
     new_num = len(data["customers"]) + 1
     new_customer = {
@@ -50,7 +50,7 @@ def add_payment(customer_id, amount, note="Cash payment"):
             if amount > customer["balance_due"]:
                 return {
                     "success": False,
-                    "message": f"Payment zyada hai! Balance sirf ₹{customer['balance_due']} hai"
+                    "message": f"Payment is higher! Balance is only ₹{customer['balance_due']}"
                 }
             
             customer["balance_due"] -= amount
@@ -71,7 +71,7 @@ def add_payment(customer_id, amount, note="Cash payment"):
                 "remaining_balance": customer["balance_due"]
             }
     
-    return {"success": False, "message": "Customer nahi mila!"}
+    return {"success": False, "message": "Customer not found!"}
 
 def get_customer_statement(customer_id):
     """Customer ka poora hisaab"""
@@ -99,11 +99,11 @@ def get_customer_statement(customer_id):
     }
 
 def print_statement(customer_id):
-    """Statement print karo"""
+    """Print statement"""
     statement = get_customer_statement(customer_id)
     
     if not statement:
-        print("Customer nahi mila!")
+        print("Customer not found!")
         return
     
     print("\n" + "="*45)
@@ -142,16 +142,16 @@ def get_all_pending():
     pending.sort(key=lambda x: x["balance_due"], reverse=True)
     return pending
 
-# Test karo
+# Test
 if __name__ == "__main__":
     print("=== Pending Customers ===")
     pending = get_all_pending()
     for c in pending:
         print(f"👤 {c['name']} — ₹{c['balance_due']} pending")
     
-    print("\n=== Payment Add karo ===")
+    print("\n=== Add Payment ===")
     result = add_payment("C001", 5000, "Cash payment aaya")
     print(f"Payment result: {result}")
     
-    print("\n=== C001 ka Statement ===")
+    print("\n=== Statement of C001 ===")
     print_statement("C001")

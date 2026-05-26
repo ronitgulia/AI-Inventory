@@ -12,12 +12,12 @@ def save_distributors(data):
         json.dump(data, f, indent=2)
 
 def get_all_distributors():
-    """Saare distributors return karo"""
+    """Return all distributors"""
     data = load_distributors()
     return data["distributors"]
 
 def get_distributor_by_id(distributor_id):
-    """ID se distributor dhundo"""
+    """Find distributor by ID"""
     distributors = get_all_distributors()
     for d in distributors:
         if d["id"] == distributor_id:
@@ -25,7 +25,7 @@ def get_distributor_by_id(distributor_id):
     return None
 
 def add_distributor(distributor_data):
-    """Naya distributor add karo"""
+    """Add new distributor"""
     data = load_distributors()
     existing_ids = [d["id"] for d in data["distributors"]]
     new_num = len(existing_ids) + 1
@@ -36,7 +36,7 @@ def add_distributor(distributor_data):
     return {"success": True, "distributor_id": distributor_data["id"]}
 
 def calculate_margins(selling_price, purchase_price):
-    """Margin calculate karo"""
+    """Calculate margin"""
     margin_amount = selling_price - purchase_price
     margin_percent = round((margin_amount / purchase_price) * 100, 2)
     return {
@@ -48,7 +48,7 @@ def calculate_margins(selling_price, purchase_price):
 
 def get_distributor_margins():
     """
-    Har distributor ka margin compare karo
+    Compare margin of each distributor
     Stock data se purchase price lenge
     """
     from core.stock import get_all_products
@@ -88,7 +88,7 @@ def get_distributor_margins():
     return result
 
 def print_margin_report():
-    """Margin report print karo"""
+    """Print margin report"""
     margins = get_distributor_margins()
 
     print("\n" + "="*50)
@@ -107,6 +107,6 @@ def print_margin_report():
 
     print("\n" + "="*50)
 
-# Test karo
+# Test
 if __name__ == "__main__":
     print_margin_report()

@@ -2,7 +2,7 @@ import sys
 import os
 from dotenv import load_dotenv
 
-# Sabse pehle .env load karo
+# Load .env first
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env'))
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,16 +21,16 @@ def show_menu():
     print("\n" + "="*45)
     print("     🏪 AI INVENTORY MANAGEMENT SYSTEM")
     print("="*45)
-    print("  1. 📦 Stock Dekhna")
+    print("  1. 📦 View Stock")
     print("  2. ⚠️  Low Stock Alerts")
-    print("  3. 🛒 Naya Bill Banana")
-    print("  4. 📷 Bill Scan Karke Stock Update")
+    print("  3. 🛒 Create New Bill")
+    print("  4. 📷 Scan Bill to Update Stock")
     print("  5. 📊 Distributor Margin Report")
     print("  6. 📒 Khata Book")
-    print("  7. 💰 Payment Lena")
+    print("  7. 💰 Receive Payment")
     print("  8. 🤖 AI Inventory Analysis")
     print("  9. 🔍 Barcode Scan Test")
-    print(" 10. 🚪 Bahar Jaana")
+    print(" 10. 🚪 Exit")
     print("="*45)
 
 def show_stock():
@@ -43,24 +43,24 @@ def show_stock():
 def show_low_stock():
     low = get_low_stock_products()
     if not low:
-        print("\n✅ Sab stock theek hai!")
+        print("\n✅ All stock is fine!")
         return
     print("\n=== LOW STOCK ALERT ===")
     for p in low:
         emoji = "🔴" if p["status"] == "CRITICAL" else "🟡"
         print(f"{emoji} {p['name']} — {p['status']}")
-        print(f"   Bacha: {p['current_stock']} | Minimum: {p['min_stock']} {p['unit']}")
+        print(f"   Remaining: {p['current_stock']} | Minimum: {p['min_stock']} {p['unit']}")
 
 def new_bill():
-    print("\n=== NAYA BILL ===")
-    customer_id = input("Customer ID daalo (C001, C002...): ").strip()
+    print("\n=== NEW BILL ===")
+    customer_id = input("Enter Customer ID (C001, C002...): ").strip()
 
     items = []
     while True:
-        print("\nProduct kaise add karein?")
-        print("1. Barcode scan karke")
-        print("2. Manual ID daalo")
-        print("3. Bill complete karo")
+        print("\nHow to add product?")
+        print("1. Scan barcode")
+        print("2. Enter manual ID")
+        print("3. Complete bill")
 
         choice = input("Choice (1/2/3): ").strip()
 
@@ -71,8 +71,8 @@ def new_bill():
             result = scan_barcode_from_camera()
             if result["success"]:
                 product = result["product"]
-                print(f"✅ Mila: {product['name']} — ₹{product['selling_price']}/{product['unit']}")
-                quantity = float(input("Quantity daalo: "))
+                print(f"✅ Found: {product['name']} — ₹{product['selling_price']}/{product['unit']}")
+                quantity = float(input("Enter quantity: "))
                 items.append({
                     "product_id": product["id"],
                     "quantity": quantity
@@ -84,17 +84,17 @@ def new_bill():
             print("\nAvailable Products:")
             for p in get_all_products():
                 print(f"  {p['id']} — {p['name']} — ₹{p['selling_price']}/{p['unit']}")
-            product_id = input("Product ID daalo: ").strip()
-            quantity = float(input("Quantity daalo: "))
+            product_id = input("Enter Product ID: ").strip()
+            quantity = float(input("Enter quantity: "))
             items.append({"product_id": product_id, "quantity": quantity})
 
     if not items:
-        print("❌ Koi item add nahi kiya!")
+        print("❌ No item added!")
         return
 
     print("\nPayment mode:")
     print("1. Cash")
-    print("2. Udhari")
+    print("2. Credit")
     mode_choice = input("Choice (1/2): ").strip()
     payment_mode = "cash" if mode_choice == "1" else "udhari"
 
@@ -102,23 +102,23 @@ def new_bill():
     if result["success"]:
         print_bill(result["bill"])
 
-        # PDF generate karo
-        pdf_choice = input("\nPDF generate karni hai? (y/n): ").strip()
+        # Generate PDF
+        pdf_choice = input("\nGenerate PDF? (y/n): ").strip()
         if pdf_choice.lower() == "y":
             pdf_file = generate_pdf_bill(result["bill"])
-            print(f"✅ PDF save hui: {pdf_file}")
+            print(f"✅ PDF saved: {pdf_file}")
     else:
         print(f"❌ Error: {result['message']}")
 
 def scan_bill_update_stock():
     print("\n=== BILL SCAN ===")
-    image_path = input("Bill ki image ka path daalo: ").strip()
+    image_path = input("Enter bill image path: ").strip()
 
     if not os.path.exists(image_path):
-        print("❌ Image nahi mili!")
+        print("❌ Image not found!")
         return
 
-    print("🤖 AI bill scan kar raha hai...")
+    print("🤖 AI is scanning the bill...")
     result = scan_bill(image_path)
 
     print("\n📋 Scan Result:")
@@ -129,20 +129,20 @@ def scan_bill_update_stock():
     for item in result["items"]:
         print(f"  - {item['name']}: {item['quantity']} units @ ₹{item['price']}")
 
-    # Stock update karo
-    update_choice = input("\nStock update karni hai? (y/n): ").strip()
+    # Update stock
+    update_choice = input("\nUpdate stock? (y/n): ").strip()
     if update_choice.lower() == "y":
         for item in result["items"]:
             products = get_all_products()
             for p in products:
                 if p["name"].lower() == item["name"].lower():
                     update_stock(p["id"], item["quantity"], "add")
-                    print(f"✅ {p['name']} stock update hua — +{item['quantity']}")
+                    print(f"✅ {p['name']} stock updated — +{item['quantity']}")
 
 def show_khata():
     pending = get_all_pending()
     if not pending:
-        print("\n✅ Koi udhari nahi hai!")
+        print("\n✅ No credit pending!")
         return
 
     print("\n=== KHATA BOOK ===")
@@ -152,35 +152,35 @@ def show_khata():
         total += c['balance_due']
     print(f"\n💰 Total Pending: ₹{total}")
 
-    choice = input("\nKisi ka statement dekhna hai? (ID daalo ya Enter skip karo): ").strip()
+    choice = input("\nWant to view someone's statement? (Enter ID or press Enter to skip): ").strip()
     if choice:
         print_statement(choice)
 
 def receive_payment():
-    print("\n=== PAYMENT LENA ===")
+    print("\n=== RECEIVE PAYMENT ===")
 
     pending = get_all_pending()
     if not pending:
-        print("✅ Koi udhari nahi hai!")
+        print("✅ No credit pending!")
         return
 
     print("Pending customers:")
     for c in pending:
         print(f"  {c['id']} — {c['name']} — ₹{c['balance_due']}")
 
-    customer_id = input("\nCustomer ID daalo: ").strip()
-    amount = float(input("Amount daalo: ₹"))
+    customer_id = input("\nEnter Customer ID: ").strip()
+    amount = float(input("Enter amount: ₹"))
     note = input("Note (optional): ").strip() or "Cash payment"
 
     result = add_payment(customer_id, amount, note)
     if result["success"]:
-        print(f"✅ ₹{result['amount_paid']} payment li — {result['customer_name']}")
+        print(f"✅ ₹{result['amount_paid']} payment received — {result['customer_name']}")
         print(f"   Remaining balance: ₹{result['remaining_balance']}")
     else:
         print(f"❌ Error: {result['message']}")
 
 def ai_analysis():
-    print("\n🤖 AI Inventory Analysis chal raha hai...")
+    print("\n🤖 Running AI Inventory Analysis...")
 
     stock = load_stock()
     stock_dict = {}
@@ -200,7 +200,7 @@ def ai_analysis():
         for s in result["shortages"]:
             emoji = "🔴" if s["status"] == "CRITICAL" else "🟡"
             print(f"  {emoji} {s['product']} — {s['status']}")
-            print(f"     Bacha: {s['current_stock']} | Chahiye: {s['restock_amount']} aur")
+            print(f"     Remaining: {s['current_stock']} | Needed: {s['restock_amount']} more")
 
     if result["healthy_stock"]:
         print(f"\n✅ Healthy Stock: {', '.join(result['healthy_stock'])}")
@@ -213,7 +213,7 @@ def ai_analysis():
 
 def barcode_test():
     print("\n=== BARCODE SCAN TEST ===")
-    print("1. Camera se scan")
+    print("1. Scan with camera")
     print("2. Cancel")
 
     choice = input("Choice (1/2): ").strip()
@@ -222,19 +222,19 @@ def barcode_test():
         result = scan_barcode_from_camera()
         if result["success"]:
             product = result["product"]
-            print(f"\n✅ Product mila!")
-            print(f"   Naam: {product['name']}")
+            print(f"\n✅ Product found!")
+            print(f"   Name: {product['name']}")
             print(f"   Stock: {product['current_stock']} {product['unit']}")
             print(f"   Price: ₹{product['selling_price']}")
         else:
             print(f"❌ {result['message']}")
 
 def main():
-    print("🏪 AI Inventory System mein aapka swagat hai!")
+    print("🏪 Welcome to AI Inventory System!")
 
     while True:
         show_menu()
-        choice = input("\nChoice daalo (1-10): ").strip()
+        choice = input("\nEnter choice (1-10): ").strip()
 
         if choice == "1":
             show_stock()
@@ -255,10 +255,10 @@ def main():
         elif choice == "9":
             barcode_test()
         elif choice == "10":
-            print("\n🙏 Dhanyavaad! Phir milenge!")
+            print("\n🙏 Thank you! See you again!")
             break
         else:
-            print("❌ Galat choice! 1-10 mein se chuno.")
+            print("❌ Invalid choice! Choose from 1-10.")
 
 if __name__ == "__main__":
     main()
